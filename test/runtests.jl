@@ -149,8 +149,8 @@ function check_scheme(scheme::TnScheme{N,T}) where {N,T}
         ps = SVector(ps0.I)
         if sum(ps) <= degree
             f(xs) = prod(xs[d]^ps[d] for d in 1:D)
-            fi = one(T) * prod(factorial(p) for p in ps) /
-                 factorial(sum(p + 1 for p in ps))
+            fi = one(T) * prod(factorial(big(p)) for p in ps) /
+                 factorial(big(sum(p + 1 for p in ps)))
             vertices = SVector{D,Int}[]
             push!(vertices, ntuple(d -> 0, D))
             for d in 1:D
