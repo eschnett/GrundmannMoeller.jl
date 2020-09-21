@@ -4,6 +4,13 @@ using LinearAlgebra
 using StaticArrays
 
 export TnScheme
+"""
+    TnScheme
+
+A numerical quadrature scheme. Schemes are created by calling
+`grundmann_moeller`, and evaluated with an integration kernel function
+by calling `integrate.
+"""
 struct TnScheme{N,T}
     name::String
     dim::Int
@@ -28,6 +35,7 @@ matrix. In the first case, there need to be `D+1` points with `D`
 coordinates each. In the second case, the matrix needs to have size
 `D`×`D+1`.
 """
+integrate
 @inbounds function integrate(fun, scheme::TnScheme{N,T},
                              vertices::SMatrix{D,N,U}) where {N,T,D,U}
     @assert N > 0
