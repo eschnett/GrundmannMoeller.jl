@@ -74,7 +74,7 @@ Schlömer.
 
 The algorithm itself was published by
 * A. Grundmann, H. M. Möller, "Invariant integration formulas for the
-  n-simplex by combinatorial methods", SIAM J. Numer. Anal. 15,
+  `n`-simplex by combinatorial methods", SIAM J. Numer. Anal. 15,
   282-290 (1978), [DOI
   10.1137/0715019](https://doi.org/10.1137/0715019).
 
