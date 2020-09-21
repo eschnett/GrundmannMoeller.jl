@@ -65,7 +65,6 @@ The vertices need to be passed either as a vector-of-vectors or as a
 matrix. In the first case, there need to be `D+1` points with `D`
 coordinates each. In the second case, the matrix needs to have size
 `D`×`D+1`.
-```
 
 ## Provenance of this package
 
