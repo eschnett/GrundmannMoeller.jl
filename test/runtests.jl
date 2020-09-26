@@ -85,59 +85,64 @@ end
     @test scheme.dim == D
     @test scheme.degree == degree
     @test scheme.weights == [1]
-    @test scheme.points == [[1//2, 1//2]]
+    @test scheme.points == [[1 // 2, 1 // 2]]
 
     D = 1
     degree = 3
     scheme = grundmann_moeller(T, Val(D), degree)
     @test scheme.dim == D
     @test scheme.degree == degree
-    @test scheme.weights == [2//3, 2//3, -1//3]
-    @test scheme.points == [[3//4, 1//4], [1//4, 3//4], [1//2, 1//2]]
+    @test scheme.weights == [2 // 3, 2 // 3, -1 // 3]
+    @test scheme.points ==
+          [[3 // 4, 1 // 4], [1 // 4, 3 // 4], [1 // 2, 1 // 2]]
 
     D = 1
     degree = 5
     scheme = grundmann_moeller(T, Val(D), degree)
     @test scheme.dim == D
     @test scheme.degree == degree
-    @test scheme.weights == [27//40, 27//40, 27//40, -8//15, -8//15, 1//24]
+    @test scheme.weights ==
+          [27 // 40, 27 // 40, 27 // 40, -8 // 15, -8 // 15, 1 // 24]
     @test scheme.points ==
-          [[5//6, 1//6], [1//2, 1//2], [1//6, 5//6], [3//4, 1//4], [1//4, 3//4],
-           [1//2, 1//2]]
+          [[5 // 6, 1 // 6], [1 // 2, 1 // 2], [1 // 6, 5 // 6],
+           [3 // 4, 1 // 4], [1 // 4, 3 // 4], [1 // 2, 1 // 2]]
 
     D = 2
     degree = 1
     scheme = grundmann_moeller(T, Val(D), degree)
     @test scheme.dim == D
     @test scheme.degree == degree
-    @test scheme.weights == [1//1]
-    @test scheme.points == [[1//3, 1//3, 1//3]]
+    @test scheme.weights == [1 // 1]
+    @test scheme.points == [[1 // 3, 1 // 3, 1 // 3]]
 
     D = 2
     degree = 3
     scheme = grundmann_moeller(T, Val(D), degree)
     @test scheme.dim == D
     @test scheme.degree == degree
-    @test scheme.weights == [25//48, 25//48, 25//48, -9//16]
-    @test scheme.points ==
-          [[3//5, 1//5, 1//5], [1//5, 3//5, 1//5], [1//5, 1//5, 3//5],
-           [1//3, 1//3, 1//3]]
+    @test scheme.weights == [25 // 48, 25 // 48, 25 // 48, -9 // 16]
+    @test scheme.points == [[3 // 5, 1 // 5, 1 // 5], [1 // 5, 3 // 5, 1 // 5],
+           [1 // 5, 1 // 5, 3 // 5], [1 // 3, 1 // 3, 1 // 3]]
 
     D = 3
     degree = 1
     scheme = grundmann_moeller(T, Val(D), degree)
     @test scheme.dim == D
     @test scheme.degree == degree
-    @test scheme.weights == [1//1]
-    @test scheme.points == [[1//4, 1//4, 1//4, 1//4]]
+    @test scheme.weights == [1 // 1]
+    @test scheme.points == [[1 // 4, 1 // 4, 1 // 4, 1 // 4]]
 end
 
 function check_scheme(scheme::TnScheme{2,T}) where {T}
     for p1 in 0:(scheme.degree)
         f(x) = x[1]^p1
         fi = one(T) / (p1 + 1)
-        fq = integrate(f, scheme, [(0,), (1,)])
-        @test fq == fi
+        fq1 = integrate(f, scheme, [(0,), (1,)])
+        @test fq1 == fi
+        fq2 = integrate(f, scheme, [0; 1])
+        @test fq2 == fi
+        fq0 = integrate(f, scheme)
+        @test fq0 == fi
     end
 end
 
@@ -156,8 +161,14 @@ function check_scheme(scheme::TnScheme{N,T}) where {N,T}
             for d in 1:D
                 push!(vertices, ntuple(==(d), D))
             end
-            fq = integrate(f, scheme, vertices)
-            @test fq == fi
+            fq1 = integrate(f, scheme, vertices)
+            @test fq1 == fi
+            vertices2 = Int[vertices[n][d] for n in 1:N, d in 1:D]
+            @assert size(vertices2) == (N, D)
+            fq2 = integrate(f, scheme, vertices2)
+            @test fq2 == fi
+            fq0 = integrate(f, scheme)
+            @test fq0 == fi
         end
     end
 end

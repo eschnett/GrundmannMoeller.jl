@@ -22,6 +22,7 @@ end
 
 export integrate
 """
+    integrate(fun, scheme)
     integrate(fun, scheme, vertices::AbstractVector)
     integrate(fun, scheme, vertices::AbstractMatrix)
 
@@ -34,8 +35,31 @@ The vertices need to be passed either as a vector-of-vectors or as a
 matrix. In the first case, there need to be `D+1` points with `D`
 coordinates each. In the second case, the matrix needs to have size
 `D`×`D+1`.
+
+If the vertices are omitted, the function is called with barycentric
+coordinates instead.
 """
 integrate
+@inbounds function integrate(fun, scheme::TnScheme{N,T}) where {N,T}
+    @assert N > 0
+
+    ws = scheme.weights
+    ps = scheme.points
+    @assert length(ws) == length(ps)
+
+    p1 = ps[1]
+    R = typeof(ws[1] * fun(p1))
+
+    s = zero(R)
+    @simd for i in 1:length(ws)
+        w = ws[i]
+        p = ps[i]
+        s += w * fun(p)
+    end
+
+    return s / factorial(N - 1)
+end
+
 @inbounds function integrate(fun, scheme::TnScheme{N,T},
                              vertices::SMatrix{D,N,U}) where {N,T,D,U}
     @assert N > 0
@@ -60,13 +84,19 @@ integrate
 
     # If `U` is an integer type, then Linearalgebra.det converts to
     # floating-point values; we might want a different type
-    vol = R(calc_vol(vertices)) / factorial(D)
+    vol = R(calc_vol(vertices)) / factorial(N - 1)
     return vol * s
+end
+function integrate(fun, scheme::TnScheme, vertices::SMatrix)
+    return error("Wrong dimension for vertices matrix")
 end
 @inbounds function integrate(fun, scheme::TnScheme{N,T},
                              vertices::SVector{N,SVector{D,U}}) where {N,T,D,U}
     return integrate(fun, scheme,
                      SMatrix{D,N,U}(vertices[n][d] for d in 1:D, n in 1:N))
+end
+function integrate(fun, scheme, vertices::SVector{N,<:SVector}) where {N}
+    return error("Wrong dimension for vertices array")
 end
 function integrate(kernel, scheme::TnScheme{N},
                    vertices::AbstractVector) where {N}
@@ -81,10 +111,10 @@ function integrate(kernel, scheme::TnScheme{N},
                    vertices::AbstractMatrix) where {N}
     @assert size(vertices, 1) == N
     @assert N > 0
-    D = length(vertices[1])
+    D = size(vertices, 2)
     @assert N >= D + 1
     vertices′ = SMatrix{N,D}(vertices)'
-    return integrate(kernel, scheme, vertices)
+    return integrate(kernel, scheme, vertices′)
 end
 
 @inbounds function calc_vol(vertices::SMatrix{D,N,T}) where {D,N,T}
