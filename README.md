@@ -1,9 +1,10 @@
 # Grundmann-Möller n-dimensional Simplex Quadrature
 
-* [GitHub](https://github.com/eschnett/GrundmannMoeller.jl): Source
-  code repository
-* [![GitHub
+[![GitHub
   CI](https://github.com/eschnett/GrundmannMoeller.jl/workflows/CI/badge.svg)](https://github.com/eschnett/GrundmannMoeller.jl/actions)
+  [![deps](https://juliahub.com/docs/GrundmannMoeller/deps.svg)](https://juliahub.com/ui/Packages/GrundmannMoeller/wPnI6?t=2)
+  [![version](https://juliahub.com/docs/GrundmannMoeller/version.svg)](https://juliahub.com/ui/Packages/GrundmannMoeller/wPnI6)
+  [![pkgeval](https://juliahub.com/docs/GrundmannMoeller/pkgeval.svg)](https://juliahub.com/ui/Packages/GrundmannMoeller/wPnI6)
 
 ## Description
 
