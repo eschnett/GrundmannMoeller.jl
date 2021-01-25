@@ -1,7 +1,7 @@
 name = "GrundmannMoeller"
 uuid = "36aa67b7-9d79-4e90-bbc0-05abd90a007e"
 authors = ["Erik Schnetter <schnetter@gmail.com>"]
-version = "0.1.1"
+version = "0.1.2"
 
 [deps]
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
